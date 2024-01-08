@@ -1,0 +1,112 @@
+<div class="main-container">
+  <div class="pd-ltr-20 xs-pd-20-10">
+    <div class="min-height-200px">
+      <!-- Simple Datatable start -->
+      <div class="card-box mb-30">
+        <div class="pd-20" style="display: flex; justify-content: space-between;">
+          <h4 class="text-blue h4">Quản lý bàn</h4>
+          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#insert-modal">Thêm
+            mới</button>
+        </div>
+        <div class="pb-20">
+          <table class="data-table table stripe hover nowrap" id="myTable">
+            <thead>
+              <tr>
+                <th class="table-plus datatable-nosort">STT</th>
+                <th>Số bàn</th>
+                <th>Trạng thái</th>
+                <th class="datatable-nosort">Tác vụ</th>
+              </tr>
+            </thead>
+            <tbody>
+              {{#each tables}}
+              <tr>
+                <td class="table-plus">{{calculateIndex @index}}</td>
+                <td>
+                  Bàn {{this.soThuTu}}
+                </td>
+                <td>
+                  {{#equal this.trangThaiOrder 'Trống'}}
+                  <span class="badge badge-pill badge-secondary">Trống</span>
+                  {{/equal}}
+                  {{#equal this.trangThaiOrder 'Có khách'}}
+                  <span class="badge badge-pill badge-success">Có khách</span>
+                  {{/equal}}
+                </td>
+                <td>
+                  <button type="button" class="btn btn-danger btn-delete" data-toggle="modal"
+                    data-target="#delete-modal" data-id="{{this.id}}">Xoá</button>
+                </td>
+              </tr>
+              {{/each}}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal thêm bàn-->
+<div class="modal fade" id="insert-modal" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Thêm bàn mới</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form action="/tables" method="post">
+        <div class="modal-body">
+          <div class="form-group">
+            <label>Số thứ tự bàn</label>
+            <input required="0" class="form-control" placeholder="Nhập số thứ tự bàn" type="number" min="1" max="200"
+              name="tableIndex">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Huỷ</button>
+          <button type="submit" class="btn btn-primary">Thêm bàn</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Modal xoá bàn-->
+<div class="modal fade" id="delete-modal" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Xác nhận hệ thống</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form action="/tables/remove" method="post">
+        <div class="modal-body">
+          <label>Bạn có muốn xoá bàn?</label>
+          <input type="hidden" id="tableIDDeteleInput" name="tableID">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Huỷ</button>
+          <button type="submit" class="btn btn-danger">Xoá</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Bắt sự kiện cho từng item của table
+  const table = document.getElementById("myTable");
+
+  // Xử lý nút xoá bàn
+  table.addEventListener("click", (event) => {
+    if (event.target.classList.contains("btn-delete")) {
+      const tableID = event.target.getAttribute('data-id');
+      document.getElementById('tableIDDeteleInput').value = tableID;
+    }
+  });
+</script>

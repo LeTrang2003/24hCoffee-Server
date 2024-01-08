@@ -1,0 +1,106 @@
+<div class="main-container">
+  <div class="pd-ltr-20 xs-pd-20-10">
+    <div class="min-height-200px">
+      <div class="invoice-wrap">
+        <div class="invoice-box">
+          <h4 class="text-center mb-30 weight-600">HOÁ ĐƠN CHI TIẾT</h4>
+          <div class="row pb-30">
+            <div class="col-md-6">
+              <h5 class="mb-15">{{bill.id}}</h5>
+              <p class="font-14 mb-5">Giờ vào: <strong class="weight-600">
+                  {{#equal bill.gioVao null}}
+                  Chưa xác định
+                  {{else}}
+                  {{formatDateTime bill.gioVao}}
+                  {{/equal}}
+                </strong>
+              </p>
+              <p class="font-14 mb-5">Giờ ra: <strong class="weight-600">
+                  {{#equal bill.gioRa null}}
+                  Chưa xác định
+                  {{else}}
+                  {{formatDateTime bill.gioRa}}
+                  {{/equal}}
+                </strong>
+              </p>
+              <p class="font-14 mb-5">Nhân viên phụ trách: <strong class="weight-600">{{bill.hoVaTen}}</strong>
+              </p>
+            </div>
+            <div class="col-md-6">
+              <h5 class="mb-15">&nbsp;</h5>
+              <p class="font-14 mb-5">Số bàn: <strong class="weight-600">{{bill.soThuTu}}</strong></p>
+              <p class="font-14 mb-5">Ngày thanh toán: <strong class="weight-600">
+                  {{#equal bill.ngayThanhToan null}}
+                  Chưa xác định
+                  {{else}}
+                  {{formatDate bill.ngayThanhToan}}
+                  {{/equal}}
+                </strong>
+              </p>
+              <p class="font-14 mb-5">Thanh toán:
+                {{#equal bill.trangThaiThanhToan 'Chưa thanh toán'}}
+                <strong class="weight-600" style="color: red;">Chưa thanh toán</strong>
+                {{/equal}}
+                {{#equal bill.trangThaiThanhToan 'Đã thanh toán'}}
+                <strong class="weight-600" style="color: #28A745;">Đã thanh toán</strong>
+                {{/equal}}
+              </p>
+            </div>
+          </div>
+          <div class="invoice-desc pb-30">
+            <div class="invoice-desc-head clearfix" style="background-color: #FFC107;">
+              <div class="invoice-rate" style="justify-content: center; display: flex;"></div>
+              <div class="invoice-sub" style="justify-content: center; display: flex;">Tên sản phẩm</div>
+              <div class="invoice-hours" style="justify-content: center; display: flex;">Số lượng</div>
+              <div class="invoice-subtotal" style="justify-content: center; display: flex;">Thêm</div>
+            </div>
+            <div class="invoice-desc-body">
+              <ul>
+                {{#each billsDetail}}
+                <li class="clearfix" style="align-items: center; display: flex;">
+                  <div class="invoice-rate" style="justify-content: center; display: flex;">
+                    <img style="width: 80px; height: 80px;" src="{{this.anhSanPham}}" alt="Hình ảnh" />
+                  </div>
+                  <div class="invoice-sub" style="justify-content: center; display: flex;">{{this.tenSanPham}}</div>
+                  <div class="invoice-hours" style="justify-content: center; display: flex;">x{{this.soLuong}}</div>
+                  <div class="invoice-subtotal" style="justify-content: center; display: flex;"><a
+                      href="/products/update/{{this.sanPhamID}}" style="font-size: 14px; color: blue;">Chi tiết sản
+                      phẩm</a>
+                  </div>
+                </li>
+                {{/each}}
+              </ul>
+            </div>
+            <div class="invoice-desc-footer">
+              <div class="invoice-desc-head clearfix" style="background-color: #FFC107;">
+                <div class="invoice-sub">Ngày thanh toán</div>
+                <div class="invoice-sub">Tổng tiền</div>
+              </div>
+              <div class="invoice-desc-body">
+                <ul>
+                  <li class="clearfix">
+                    <div class="invoice-sub">
+                      {{#equal bill.ngayThanhToan null}}
+                      Chưa xác định
+                      {{else}}
+                      {{formatDate bill.ngayThanhToan}}
+                      {{/equal}}
+                    </div>
+                    <div class="invoice-sub" style="color: red; font-weight: 600; font-size: 17px;">
+                      {{#equal bill.thanhTien null}}
+                      Chưa xác định
+                      {{else}}
+                      {{formatCurrency bill.thanhTien}}
+                      {{/equal}}
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <h4 class="text-center pb-20">24hCoffee</h4>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

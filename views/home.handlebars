@@ -1,0 +1,134 @@
+<div class="main-container">
+	<div class="pd-ltr-20">
+		<div class="card-box height-100-p mb-30">
+			<img src="http://res.cloudinary.com/dlaasqvqu/image/upload/v1703705613/24h_coffee/nhhielwxvludhisol164.jpg" alt=""
+				class="" style="width: 100%; height: 200px; object-fit: cover; border-radius: 20px;">
+		</div>
+		<div class="row">
+			<div class="col-xl-3 mb-30">
+				<div class="card-box height-100-p widget-style1">
+					<div class="d-flex flex-wrap align-items-center">
+						<div class="progress-data">
+							<img
+								src="https://images.pexels.com/photos/2647714/pexels-photo-2647714.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+								alt="" style="width: 70px; height: 70px; object-fit: cover; border-radius: 10px;">
+						</div>
+						<div class="widget-data">
+							<div class="h4 mb-0">{{data.countTable}}</div>
+							<div class="weight-600 font-14">Bàn</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-xl-3 mb-30">
+				<div class="card-box height-100-p widget-style1">
+					<div class="d-flex flex-wrap align-items-center">
+						<div class="progress-data">
+							<img
+								src="https://images.pexels.com/photos/312418/pexels-photo-312418.jpeg?auto=compress&cs=tinysrgb&w=600"
+								alt="" style="width: 70px; height: 70px; object-fit: cover; border-radius: 10px;">
+						</div>
+						<div class="widget-data">
+							<div class="h4 mb-0">{{data.countProduct}}</div>
+							<div class="weight-600 font-14">Sản phẩm</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-xl-3 mb-30">
+				<div class="card-box height-100-p widget-style1">
+					<div class="d-flex flex-wrap align-items-center">
+						<div class="progress-data">
+							<img src="https://vietucnews.net/wp-content/uploads/2018/06/coffee-training-in-Melbourne.jpg" alt=""
+								style="width: 70px; height: 70px; object-fit: cover; border-radius: 10px;">
+						</div>
+						<div class="widget-data">
+							<div class="h4 mb-0">{{data.countEmployee}}</div>
+							<div class="weight-600 font-14">Nhân viên</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-xl-3 mb-30">
+				<div class="card-box height-100-p widget-style1">
+					<div class="d-flex flex-wrap align-items-center">
+						<div class="progress-data">
+							<img
+								src="https://images.pexels.com/photos/414551/pexels-photo-414551.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+								alt="" style="width: 70px; height: 70px; object-fit: cover; border-radius: 10px;">
+						</div>
+						<div class="widget-data">
+							<div class="h4 mb-0">{{data.countBill}}</div>
+							<div class="weight-600 font-14">Hoá đơn</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="card-box mb-30">
+			<div
+				style="display: flex; justify-content: space-between; align-items: center; padding-left: 20px; padding-top: 20px; padding-right: 20px;">
+				<h4 class="text-blue h4">Doanh thu cửa hàng</h4>
+				<select class="form-control" name="yearSelect"
+					style="width: 100px; font-size: 14px; height: 30px; margin-right: 10px;" onchange="getSelectedValue(this)">
+					<option value="2020" {{#equal data.currentYear 2020}} selected {{/equal}}>2020</option>
+					<option value="2021" {{#equal data.currentYear 2021}} selected {{/equal}}>2021</option>
+					<option value="2022" {{#equal data.currentYear 2022}} selected {{/equal}}>2022</option>
+					<option value="2023" {{#equal data.currentYear 2023}} selected {{/equal}}>2023</option>
+					<option value="2024" {{#equal data.currentYear 2024}} selected {{/equal}}>2024</option>
+					<option value="2025" {{#equal data.currentYear 20205}} selected {{/equal}}>2025</option>
+					<option value="2026" {{#equal data.currentYear 2026}} selected {{/equal}}>2026</option>
+					<option value="2027" {{#equal data.currentYear 2027}} selected {{/equal}}>2027</option>
+				</select>
+			</div>
+			<canvas height="75px" id="myChart" style="margin-left: 20px;"></canvas>
+		</div>
+		<div class="footer-wrap pd-20 mb-20 card-box">
+			Website quản trị cửa hàng cà phê 24hCoffee
+		</div>
+	</div>
+</div>
+
+<script>
+  let myChart; // Biến để lưu trữ đối tượng Chart
+
+  const currentYear = new Date().getFullYear();
+  updateChartRevenue(currentYear);
+
+  function getSelectedValue(selectElement) {
+    var selectedValue = selectElement.value;
+    updateChartRevenue(selectedValue);
+  }
+
+  function updateChartRevenue(year) {
+    const revenue = {{{ data.revenue }}};
+    const doanhThu = revenue.filter(item => item.nam === parseInt(year, 10));
+
+    const ctx = document.getElementById('myChart');
+
+    // Kiểm tra và xóa biểu đồ cũ nếu đã được tạo trước đó
+    if (myChart) {
+      myChart.destroy();
+    }
+
+    myChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: ['Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4', 'Tháng 5', 'Tháng 6', 'Tháng 7', 'Tháng 8', 'Tháng 9', 'Tháng 10', 'Tháng 11', 'Tháng 12'],
+        datasets: [{
+          label: 'Doanh thu năm ' + year,
+          data: doanhThu.map(item => item.doanhThu),
+          borderWidth: 2,
+          borderColor: '#1b00ff',
+        }]
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      }
+    });
+  }
+</script>

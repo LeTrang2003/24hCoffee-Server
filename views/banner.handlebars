@@ -1,0 +1,148 @@
+<div class="main-container">
+  <div class="pd-ltr-20 xs-pd-20-10">
+    <div class="min-height-200px">
+      <!-- Simple Datatable start -->
+      <div class="card-box mb-30">
+        <div class="pd-20" style="display: flex; justify-content: space-between;">
+          <h4 class="text-blue h4">Quản lý banner</h4>
+          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#insert-modal">Thêm
+            mới</button>
+        </div>
+        <div class="pb-20">
+          <table class="data-table table stripe hover nowrap" id="myTable">
+            <thead>
+              <tr>
+                <th class="table-plus datatable-nosort">STT</th>
+                <th>Hình ảnh</th>
+                <th>Trạng thái</th>
+                <th>Hiển thị</th>
+                <th class="datatable-nosort">Tác vụ</th>
+              </tr>
+            </thead>
+            <tbody>
+              {{#each banners}}
+              <tr>
+                <td class="table-plus">{{calculateIndex @index}}</td>
+                <td>
+                  <img style="width: 220px; height: 100px;" src="{{this.anh}}" alt="Hình ảnh" />
+                </td>
+                <td>
+                  {{#equal this.hienThi 0}}
+                  <span class="badge badge-pill badge-secondary">Riêng tư</span>
+                  {{/equal}}
+                  {{#equal this.hienThi 1}}
+                  <span class="badge badge-pill badge-success">Công khai</span>
+                  {{/equal}}
+                </td>
+                <td>
+                  <form action="/banners/update/{{this.id}}" method="POST" name="formUpdate">
+                    <input type="hidden" name="bannerStatus" id="bannerStatusInput" value="{{this.hienThi}}">
+                    <input type="checkbox" {{#equal this.hienThi 1}} checked {{/equal}} class="switch-btn"
+                      data-color="#28a745" data-secondary-color="#6c757d">
+                  </form>
+                </td>
+                <td>
+                  <button type="button" class="btn btn-danger btn-delete" data-toggle="modal"
+                    data-target="#delete-modal" data-id="{{this.id}}">Xoá</button>
+                </td>
+              </tr>
+              {{/each}}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Modal thêm banner-->
+  <div class="modal fade" id="insert-modal" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Thêm banner</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <form action="/banners" method="post" enctype="multipart/form-data">
+          <div class="modal-body">
+            <div class="form-group">
+              <label>Chọn ảnh</label>
+              <input type="file" name="image" class="form-control-file form-control height-auto" id="imageInput"
+                accept="image/png, image/jpeg">
+            </div>
+            <div style="display: flex; justify-content: center;">
+              <img src="" id="selectedImage" style="max-width: 100%; display: none;">
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Huỷ</button>
+            <button type="submit" class="btn btn-primary">Thêm mới</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal xoá banner-->
+  <div class="modal fade" id="delete-modal" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Xác nhận hệ thống</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <form action="/banners/remove" method="post">
+          <div class="modal-body">
+            <label>Bạn có muốn xoá baner?</label>
+            <input type="hidden" id="bannerIDDeteleInput" name="bannerID">
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Huỷ</button>
+            <button type="submit" class="btn btn-danger">Xoá</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Sau khi chọn ảnh sẽ hiển thị hình ảnh theo kích thước
+  document.getElementById('imageInput').addEventListener('change', function (e) {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function (event) {
+        const selectedImage = document.getElementById('selectedImage');
+        selectedImage.src = event.target.result;
+        selectedImage.style.display = 'block';
+      };
+      reader.readAsDataURL(file);
+    } else {
+      e.defaultPrevented();
+    }
+  });
+</script>
+
+<script>
+  // Bắt sự kiện cho từng item của table
+  const table = document.getElementById("myTable");
+
+  // Xử lý nút cập nhật trạng thái
+  table.addEventListener("change", (event) => {
+    if (event.target.classList.contains("switch-btn")) {
+      const formUpdateBannerStatus = event.target.closest('form');
+      formUpdateBannerStatus.submit();
+    }
+  });
+
+  // Xử lý nút xoá banner
+  table.addEventListener("click", (event) => {
+    if (event.target.classList.contains("btn-delete")) {
+      const bannerID = event.target.getAttribute('data-id');
+      document.getElementById('bannerIDDeteleInput').value = bannerID;
+    }
+  });
+</script>

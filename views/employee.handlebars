@@ -1,0 +1,100 @@
+<div class="main-container">
+  <div class="pd-ltr-20 xs-pd-20-10">
+    <div class="min-height-200px">
+      <!-- Simple Datatable start -->
+      <div class="card-box mb-30">
+        <div class="pd-20" style="display: flex; justify-content: space-between;">
+          <h4 class="text-blue h4">Quản lý nhân viên</h4>
+          <a href="/employees/insert" class="btn btn-primary">Thêm mới</a>
+        </div>
+        <div class="pb-20">
+          <table class="data-table table stripe hover nowrap" id="myTable">
+            <thead>
+              <tr>
+                <th class="table-plus datatable-nosort">STT</th>
+                <th>Hình ảnh</th>
+                <th>Họ và tên</th>
+                <th>Tên đăng nhập</th>
+                <th>Mật khẩu</th>
+                <th>Ngày sinh</th>
+                <th>Số điện thoại</th>
+                <th>Giới tính</th>
+                <th class="datatable-nosort">Tác vụ</th>
+              </tr>
+            </thead>
+            <tbody>
+              {{#each employees}}
+              <tr>
+                <td class="table-plus">{{calculateIndex @index}}</td>
+                <td>
+                  <img style="width: 100px; height: 100px; border-radius: 100px; object-fit: cover;" src="{{this.anhDaiDien}}"
+                    alt="Hình ảnh" />
+                </td>
+                <td>
+                  {{this.hoVaTen}}
+                </td>
+                <td>
+                  {{this.tenDangNhap}}
+                </td>
+                <td>
+                  {{this.matKhau}}
+                </td>
+                <td>
+                  {{formatDate this.ngaySinh}}
+                </td>
+                <td>
+                  {{this.dienThoai}}
+                </td>
+                <td>
+                  {{this.gioiTinh}}
+                </td>
+                <td>
+                  <button type="button" class="btn btn-danger btn-delete" data-toggle="modal"
+                    data-target="#delete-modal" data-id="{{this.tenDangNhap}}">Xoá</button>
+                </td>
+              </tr>
+              {{/each}}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal xoá nhân viên-->
+<div class="modal fade" id="delete-modal" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Xác nhận hệ thống</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form action="/employees/remove" method="post">
+        <div class="modal-body">
+          <label>Bạn có muốn xoá nhân viên?</label>
+          <input type="hidden" id="empIDDeleteInput" name="username">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Huỷ</button>
+          <button type="submit" class="btn btn-danger">Xoá</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Bắt sự kiện cho từng item của table
+  const table = document.getElementById("myTable");
+
+  // Xử lý nút xoá bàn
+  table.addEventListener("click", (event) => {
+    if (event.target.classList.contains("btn-delete")) {
+      const employeeID = event.target.getAttribute('data-id');
+      document.getElementById('empIDDeleteInput').value = employeeID;
+    }
+  });
+</script>

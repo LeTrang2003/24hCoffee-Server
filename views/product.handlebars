@@ -1,0 +1,97 @@
+<div class="main-container">
+  <div class="pd-ltr-20 xs-pd-20-10">
+    <div class="min-height-200px">
+      <!-- Simple Datatable start -->
+      <div class="card-box mb-30">
+        <div class="pd-20" style="display: flex; justify-content: space-between;">
+          <h4 class="text-blue h4">Quản lý sản phẩm</h4>
+          <a href="/products/insert" class="btn btn-primary">Thêm mới</a>
+        </div>
+        <div class="pb-20">
+          <table class="data-table table stripe hover nowrap" id="myTable">
+            <thead>
+              <tr>
+                <th class="table-plus datatable-nosort">STT</th>
+                <th>Hình ảnh</th>
+                <th>Tên sản phẩm</th>
+                <th>Giá bán</th>
+                <th>Trạng thái</th>
+                <th>Danh mục</th>
+                <th class="datatable-nosort">Tác vụ</th>
+              </tr>
+            </thead>
+            <tbody>
+              {{#each products}}
+              <tr>
+                <td class="table-plus">{{calculateIndex @index}}</td>
+                <td>
+                  <img style="width: 100px; height: 100px;" src="{{this.anhSanPham}}" alt="Hình ảnh" />
+                </td>
+                <td>
+                  {{this.tenSanPham}}
+                </td>
+                <td>
+                  {{formatCurrency this.giaSanPham}}
+                </td>
+                <td>
+                  {{#equal this.trangThaiSanPham 'Hết hàng'}}
+                  <span class="badge badge-pill badge-secondary">Hết hàng</span>
+                  {{/equal}}
+                  {{#equal this.trangThaiSanPham 'Còn hàng'}}
+                  <span class="badge badge-pill badge-success">Còn hàng</span>
+                  {{/equal}}
+                </td>
+                <td>
+                  {{this.tenDanhMuc}}
+                </td>
+                <td>
+                  <a href="/products/update/{{this.id}}" class="btn btn-success">Cập nhật</a>
+                  <button type="button" class="btn btn-danger btn-delete" style="margin-left: 10px;" data-toggle="modal"
+                    data-target="#delete-modal" data-id="{{this.id}}">Xoá</button>
+                </td>
+              </tr>
+              {{/each}}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal xoá sản phẩm-->
+<div class="modal fade" id="delete-modal" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Xác nhận hệ thống</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form action="/products/remove" method="post">
+        <div class="modal-body">
+          <label>Bạn có muốn xoá sản phẩm?</label>
+          <input type="hidden" id="productIDDeleteInput" name="productID">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Huỷ</button>
+          <button type="submit" class="btn btn-danger">Xoá</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Bắt sự kiện cho từng item của table
+  const table = document.getElementById("myTable");
+
+  // Xử lý nút xoá bàn
+  table.addEventListener("click", (event) => {
+    if (event.target.classList.contains("btn-delete")) {
+      const productID = event.target.getAttribute('data-id');
+      document.getElementById('productIDDeleteInput').value = productID;
+    }
+  });
+</script>

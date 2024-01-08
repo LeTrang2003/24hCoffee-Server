@@ -1,0 +1,146 @@
+<div class="main-container">
+  <div class="pd-ltr-20 xs-pd-20-10">
+    <div class="min-height-200px">
+      <!-- Simple Datatable start -->
+      <div class="card-box mb-30">
+        <div class="pd-20" style="display: flex; justify-content: space-between;">
+          <h4 class="text-blue h4">Quản lý danh mục</h4>
+          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#insert-modal">Thêm
+            mới</button>
+        </div>
+        <div class="pb-20">
+          <table class="data-table table stripe hover nowrap" id="myTable">
+            <thead>
+              <tr>
+                <th class="table-plus datatable-nosort">STT</th>
+                <th>Tên danh mục</th>
+                <th>Số sản phẩm trong danh mục</th>
+                <th class="datatable-nosort">Tác vụ</th>
+              </tr>
+            </thead>
+            <tbody>
+              {{#each categories}}
+              <tr>
+                <td class="table-plus">{{calculateIndex @index}}</td>
+                <td>
+                  {{this.tenDanhMuc}}
+                </td>
+                <td>
+                  {{this.soLuongSanPham}} sản phẩm
+                </td>
+                <td>
+                  <button type="button" class="btn btn-success btn-update" data-toggle="modal"
+                    data-target="#update-modal"
+                    data-json='{"id": "{{this.id}}", "tenDanhMuc": "{{this.tenDanhMuc}}"}'>Cập
+                    nhật</button>
+                  <button type="button" class="btn btn-danger btn-delete" style="margin-left: 10px;" data-toggle="modal"
+                    data-target="#delete-modal" data-id="{{this.id}}">Xoá</button>
+                </td>
+              </tr>
+              {{/each}}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal thêm danh mục-->
+<div class="modal fade" id="insert-modal" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Thêm danh mục mới</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form action="/categories" method="post">
+        <div class="modal-body">
+          <div class="form-group">
+            <label>Tên danh mục</label>
+            <input required="0" class="form-control" placeholder="Nhập tên danh mục" name="categoryName">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Huỷ</button>
+          <button type="submit" class="btn btn-primary">Thêm mới</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Modal cập nhật danh mục-->
+<div class="modal fade" id="update-modal" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Cập nhật danh mục</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form action="/categories/update" method="post">
+        <div class="modal-body">
+          <div class="form-group">
+            <label>Tên danh mục</label>
+            <input required="0" class="form-control" placeholder="Nhập tên danh mục" name="categoryName"
+              id="categoryNameUpdateInput">
+            <input type="hidden" class="form-control" placeholder="id" name="categoryID" id="categoryIDUpdateInput">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Huỷ</button>
+          <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Modal xoá danh mục-->
+<div class="modal fade" id="delete-modal" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Xác nhận hệ thống</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form action="/categories/remove" method="post">
+        <div class="modal-body">
+          <label>Bạn có muốn xoá danh mục?</label>
+          <input type="hidden" id="categoryIDDeteleInput" name="categoryID">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Huỷ</button>
+          <button type="submit" class="btn btn-danger">Xoá</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Bắt sự kiện cho từng item của table
+  const table = document.getElementById("myTable");
+
+  // Xử lý nút xoá bàn
+  table.addEventListener("click", (event) => {
+    if (event.target.classList.contains("btn-delete")) {
+      const categoryID = event.target.getAttribute('data-id');
+      document.getElementById('categoryIDDeteleInput').value = categoryID;
+    }
+
+    if (event.target.classList.contains("btn-update")) {
+      const jsonData = event.target.getAttribute('data-json');
+      const jsonObject = JSON.parse(jsonData);
+
+      document.getElementById('categoryIDUpdateInput').value = jsonObject.id;
+      document.getElementById('categoryNameUpdateInput').value = jsonObject.tenDanhMuc;
+    }
+  });
+</script>

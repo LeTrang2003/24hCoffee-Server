@@ -1,0 +1,147 @@
+<div class="main-container">
+  <div class="pd-ltr-20 xs-pd-20-10">
+    <div class="min-height-200px">
+      <!-- Simple Datatable start -->
+      <div class="card-box mb-30">
+        <div class="pd-20" style="display: flex; justify-content: space-between;">
+          <h4 class="text-blue h4">Quản lý hoá đơn</h4>
+        </div>
+        <div class="pb-20">
+          <table class="data-table table stripe hover nowrap" id="myTable">
+            <thead>
+              <tr>
+                <th class="table-plus datatable-nosort">STT</th>
+                <th>Mã hoá đơn</th>
+                <th>Bàn</th>
+                <th>Ngày thanh toán</th>
+                <th>Trạng thái</th>
+                <th>Thành tiền</th>
+                <th>Nhân viên phụ trách</th>
+                <th class="datatable-nosort">Tác vụ</th>
+              </tr>
+            </thead>
+            <tbody>
+              {{#each bills}}
+              <tr>
+                <td class="table-plus">{{calculateIndex @index}}</td>
+                <td>
+                  {{this.id}}
+                </td>
+                <td>
+                  Bàn {{this.soThuTu}}
+                </td>
+                <td>
+                  {{#equal this.ngayThanhToan null}}
+                  Chưa thanh toán
+                  {{else}}
+                  {{formatDate this.ngayThanhToan}}
+                  {{/equal}}
+                </td>
+                <td>
+                  {{#equal this.trangThaiThanhToan 'Chưa thanh toán'}}
+                  <span class="badge badge-pill badge-danger">Chưa thanh toán</span>
+                  {{/equal}}
+                  {{#equal this.trangThaiThanhToan 'Đã thanh toán'}}
+                  <span class="badge badge-pill badge-success">Đã thanh toán</span>
+                  {{/equal}}
+                </td>
+                <td>
+                  {{#equal this.thanhTien null}}
+                  Chưa thanh toán
+                  {{else}}
+                  {{formatCurrency this.thanhTien}}
+                  {{/equal}}
+                </td>
+                <td>
+                  <span class="badge badge-pill badge-warning">{{this.hoVaTen}}</span>
+                </td>
+                <td>
+                  <a href="/bills/{{this.id}}" type="button" class="btn btn-primary btn-update">Xem chi tiết</a>
+                </td>
+              </tr>
+              {{/each}}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal thêm danh mục-->
+<div class="modal fade" id="insert-modal" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Thêm danh mục mới</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form action="/categories" method="post">
+        <div class="modal-body">
+          <div class="form-group">
+            <label>Tên danh mục</label>
+            <input required="0" class="form-control" placeholder="Nhập tên danh mục" name="categoryName">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Huỷ</button>
+          <button type="submit" class="btn btn-primary">Thêm mới</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Modal cập nhật danh mục-->
+<div class="modal fade" id="update-modal" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Cập nhật danh mục</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form action="/categories/update" method="post">
+        <div class="modal-body">
+          <div class="form-group">
+            <label>Tên danh mục</label>
+            <input required="0" class="form-control" placeholder="Nhập tên danh mục" name="categoryName"
+              id="categoryNameUpdateInput">
+            <input type="hidden" class="form-control" placeholder="id" name="categoryID" id="categoryIDUpdateInput">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Huỷ</button>
+          <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Modal xoá danh mục-->
+<div class="modal fade" id="delete-modal" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Xác nhận hệ thống</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form action="/categories/remove" method="post">
+        <div class="modal-body">
+          <label>Bạn có muốn xoá danh mục?</label>
+          <input type="hidden" id="categoryIDDeteleInput" name="categoryID">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Huỷ</button>
+          <button type="submit" class="btn btn-danger">Xoá</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
